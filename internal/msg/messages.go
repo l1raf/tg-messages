@@ -2,7 +2,6 @@ package msg
 
 import (
 	"context"
-	"log"
 	"tg-messages/internal/utils"
 
 	"github.com/gotd/td/telegram/query"
@@ -25,7 +24,6 @@ func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMes
 		}
 
 		count := numOfMessagesToGet
-		i := 0
 
 		f := func(ctx context.Context, elem messages.Elem) error {
 			msg, ok := elem.Msg.(*tg.Message)
@@ -35,13 +33,11 @@ func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMes
 				return nil
 			}
 
-			i++
 			tgMessages = append(tgMessages, *msg)
-			log.Print(i, msg.PeerID, msg.Message)
-
 			return nil
 		}
 
+		reverse(tgMessages)
 		iter := dlg.Messages(api).BatchSize(100).Iter()
 
 		for i := 0; i < count && iter.Next(ctx); i++ {
@@ -54,8 +50,6 @@ func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMes
 	}
 
 	err := query.GetDialogs(api).ForEach(ctx, cb)
-
-	reverse(tgMessages)
 
 	return err, tgMessages
 }

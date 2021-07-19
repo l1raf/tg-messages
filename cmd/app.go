@@ -187,13 +187,17 @@ func retry(ctx context.Context, api *tg.Client, chats []int, n int) (error, []tg
 	var err error
 	var tgMessages []tg.Message
 
-	for i := 0; i < 5; i++ {
-		time.Sleep(3 * time.Second) //wait until reconnected
+	start := time.Now()
+	elapsed := time.Since(start)
+
+	for elapsed.Seconds() < 15 {
 		err, tgMessages = msg.GetLastNMessages(ctx, api, chats, n)
 
 		if err == nil {
 			return nil, tgMessages
 		}
+
+		elapsed = time.Since(start)
 	}
 
 	return err, tgMessages

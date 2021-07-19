@@ -16,11 +16,11 @@ func NewMessageStore(db *gorm.DB) *MessageRepository {
 	}
 }
 
-func (ms *MessageRepository) Create(msg models.Message) error {
+func (mr *MessageRepository) Create(msg models.Message) error {
 	return db.Create(&msg).Error
 }
 
-func (ms *MessageRepository) Update(msg models.Message) error {
+func (mr *MessageRepository) Update(msg models.Message) error {
 	var foundMsg models.Message
 
 	err := db.
@@ -35,7 +35,7 @@ func (ms *MessageRepository) Update(msg models.Message) error {
 	return db.Model(&foundMsg).Update(&msg).Error
 }
 
-func (ms *MessageRepository) GetAll() ([]models.Message, error) {
+func (mr *MessageRepository) GetAll() ([]models.Message, error) {
 	var messages []models.Message
 
 	err := db.Find(&messages).Error

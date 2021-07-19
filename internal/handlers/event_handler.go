@@ -12,14 +12,14 @@ import (
 )
 
 type MessagesHandler struct {
-	msgStore *database.MessageRepository
-	chats    []int
+	msgRepo *database.MessageRepository
+	chats   []int
 }
 
 func NewMessagesHandler(ms *database.MessageRepository, chats []int) *MessagesHandler {
 	return &MessagesHandler{
-		msgStore: ms,
-		chats:    chats,
+		msgRepo: ms,
+		chats:   chats,
 	}
 }
 
@@ -34,7 +34,7 @@ func (mh *MessagesHandler) EditMessageHandler(ctx context.Context, entities tg.E
 		return nil
 	}
 
-	err := mh.msgStore.Update(models.Message{
+	err := mh.msgRepo.Update(models.Message{
 		MessageId:     message.ID,
 		FromId:        utils.GetPeerId(message.FromID),
 		PeerId:        utils.GetPeerId(message.PeerID),
@@ -86,7 +86,7 @@ func handleMessage(message *tg.Message, mh *MessagesHandler) error {
 		return nil
 	}
 
-	return mh.msgStore.Create(models.Message{
+	return mh.msgRepo.Create(models.Message{
 		MessageId:     message.ID,
 		FromId:        utils.GetPeerId(message.FromID),
 		PeerId:        utils.GetPeerId(message.PeerID),
