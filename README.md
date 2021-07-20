@@ -1,4 +1,3 @@
-# tg-messages
 ## Usage
 Clone repository and build the project:
 ```console
@@ -15,7 +14,7 @@ Arguments:
 * APP_HASH (required)
 * PHONE (required)
 * PASSWORD
-* DB_URI - connection string (required)
+* DB_URI - PostgreSQL connection string (required)
 * N - number of messages to save
 * PORT (8080 by default)
 * CHATS - channel, group chat or user ids
