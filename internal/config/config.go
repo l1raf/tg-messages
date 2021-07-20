@@ -5,14 +5,14 @@ import (
 )
 
 type Config struct {
-	ConnectionString string `env:"DB_URI"`
+	ConnectionString string `env:"DB_URI,required"`
 	Port             int    `env:"PORT" envDefault:"8080"`
 	Chats            []int  `env:"CHATS" envSeparator:","`
-	AppId            int    `env:"APP_ID"`
-	AppHash          string `env:"APP_HASH"`
-	Phone            string `env:"PHONE"`
+	AppID            int    `env:"APP_ID,required"`
+	AppHash          string `env:"APP_HASH,required"`
+	Phone            string `env:"PHONE,required"`
 	Password         string `env:"PASSWORD"`
-	N                int    `env:"N"` //number of messages to save
+	N                int    `env:"N"` // number of messages to save
 }
 
 func Parse() (*Config, error) {

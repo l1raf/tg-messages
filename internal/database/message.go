@@ -24,10 +24,9 @@ func (mr *MessageRepository) Update(msg models.Message) error {
 	var foundMsg models.Message
 
 	err := db.
-		Where("message_id = ?", msg.MessageId).
-		Where("peer_id = ?", msg.PeerId).
+		Where("message_id = ?", msg.MessageID).
+		Where("peer_id = ?", msg.PeerID).
 		Find(&foundMsg).Error
-
 	if err != nil {
 		return err
 	}
@@ -39,7 +38,6 @@ func (mr *MessageRepository) GetAll() ([]models.Message, error) {
 	var messages []models.Message
 
 	err := db.Find(&messages).Error
-
 	if err != nil {
 		return nil, err
 	}

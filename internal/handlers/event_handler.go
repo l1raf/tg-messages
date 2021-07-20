@@ -30,14 +30,14 @@ func (mh *MessagesHandler) EditMessageHandler(ctx context.Context, entities tg.E
 		return nil
 	}
 
-	if !msg.Contains(mh.chats, utils.GetPeerId(message.PeerID)) {
+	if !msg.Contains(mh.chats, utils.GetPeerID(message.PeerID)) {
 		return nil
 	}
 
 	err := mh.msgRepo.Update(models.Message{
-		MessageId:     message.ID,
-		FromId:        utils.GetPeerId(message.FromID),
-		PeerId:        utils.GetPeerId(message.PeerID),
+		MessageID:     message.ID,
+		FromID:        utils.GetPeerID(message.FromID),
+		PeerID:        utils.GetPeerID(message.PeerID),
 		Text:          message.Message,
 		Date:          message.Date,
 		EditDate:      message.EditDate,
@@ -48,6 +48,9 @@ func (mh *MessagesHandler) EditMessageHandler(ctx context.Context, entities tg.E
 		Post:          message.Post,
 		FromScheduled: message.FromScheduled,
 		Pinned:        message.Pinned,
+		ViaBotID:      message.ViaBotID,
+		Views:         message.Views,
+		Forwards:      message.Forwards,
 	})
 
 	log.Println("OnEditMessage:", message)
@@ -82,14 +85,14 @@ func (mh *MessagesHandler) NewChannelMessageHandler(ctx context.Context, entitie
 }
 
 func handleMessage(message *tg.Message, mh *MessagesHandler) error {
-	if !msg.Contains(mh.chats, utils.GetPeerId(message.PeerID)) {
+	if !msg.Contains(mh.chats, utils.GetPeerID(message.PeerID)) {
 		return nil
 	}
 
 	return mh.msgRepo.Create(models.Message{
-		MessageId:     message.ID,
-		FromId:        utils.GetPeerId(message.FromID),
-		PeerId:        utils.GetPeerId(message.PeerID),
+		MessageID:     message.ID,
+		FromID:        utils.GetPeerID(message.FromID),
+		PeerID:        utils.GetPeerID(message.PeerID),
 		Text:          message.Message,
 		Date:          message.Date,
 		EditDate:      message.EditDate,
@@ -100,5 +103,8 @@ func handleMessage(message *tg.Message, mh *MessagesHandler) error {
 		Post:          message.Post,
 		FromScheduled: message.FromScheduled,
 		Pinned:        message.Pinned,
+		ViaBotID:      message.ViaBotID,
+		Views:         message.Views,
+		Forwards:      message.Forwards,
 	})
 }

@@ -2,6 +2,8 @@ package msg
 
 import (
 	"context"
+	"log"
+
 	"tg-messages/internal/utils"
 
 	"github.com/gotd/td/telegram/query"
@@ -10,7 +12,7 @@ import (
 	"github.com/gotd/td/tg"
 )
 
-func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMessagesToGet int) (error, []tg.Message) {
+func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMessagesToGet int) ([]tg.Message, error) {
 	var tgMessages []tg.Message
 
 	cb := func(ctx context.Context, dlg dialogs.Elem) error {
@@ -19,13 +21,14 @@ func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMes
 			return nil
 		}
 
-		if !Contains(chats, utils.GetInputPeerId(dlg.Peer)) {
+		if !Contains(chats, utils.GetInputPeerID(dlg.Peer)) {
 			return nil
 		}
 
+		i := 0
 		count := numOfMessagesToGet
 
-		f := func(ctx context.Context, elem messages.Elem) error {
+		f := func(elem messages.Elem) error {
 			msg, ok := elem.Msg.(*tg.Message)
 
 			if !ok {
@@ -33,7 +36,10 @@ func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMes
 				return nil
 			}
 
+			i++
 			tgMessages = append(tgMessages, *msg)
+			log.Printf("%d. %v: message: %v", i, msg.PeerID, msg.Message)
+
 			return nil
 		}
 
@@ -41,7 +47,7 @@ func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMes
 		iter := dlg.Messages(api).BatchSize(100).Iter()
 
 		for i := 0; i < count && iter.Next(ctx); i++ {
-			if err := f(ctx, iter.Value()); err != nil {
+			if err := f(iter.Value()); err != nil {
 				return err
 			}
 		}
@@ -51,7 +57,7 @@ func GetLastNMessages(ctx context.Context, api *tg.Client, chats []int, numOfMes
 
 	err := query.GetDialogs(api).ForEach(ctx, cb)
 
-	return err, tgMessages
+	return tgMessages, err
 }
 
 func reverse(messages []tg.Message) {

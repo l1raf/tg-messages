@@ -1,11 +1,10 @@
 package database
 
 import (
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"tg-messages/internal/models"
 
 	"github.com/jinzhu/gorm"
-
-	"tg-messages/internal/models"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 var db *gorm.DB
@@ -13,6 +12,11 @@ var db *gorm.DB
 func OpenConnection(connectionString string) (*gorm.DB, error) {
 	var err error
 	db, err = gorm.Open("postgres", connectionString)
+
+	if err == nil {
+		db.LogMode(false)
+	}
+
 	return db, err
 }
 

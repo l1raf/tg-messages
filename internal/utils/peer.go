@@ -2,7 +2,7 @@ package utils
 
 import "github.com/gotd/td/tg"
 
-func GetPeerId(peer tg.PeerClass) int {
+func GetPeerID(peer tg.PeerClass) int {
 	switch peer := peer.(type) {
 	case *tg.PeerChat:
 		return peer.ChatID
@@ -15,7 +15,7 @@ func GetPeerId(peer tg.PeerClass) int {
 	}
 }
 
-func GetInputPeerId(peer tg.InputPeerClass) int {
+func GetInputPeerID(peer tg.InputPeerClass) int {
 	switch peer := peer.(type) {
 	case *tg.InputPeerChannel:
 		return peer.ChannelID
